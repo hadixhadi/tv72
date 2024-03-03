@@ -21,7 +21,8 @@ INSTALLED_APPS=[
     #3rd packages
     "drf_spectacular",
     'rest_framework',
-    'django_celery_beat'
+    'django_celery_beat',
+    "corsheaders",
 ]+INSTALLED_APPS
 
 
@@ -103,3 +104,8 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+
+#CORS settings
+CSRF_TRUSTED_ORIGINS = ["http://192.168.100.31:3000","http://0.0.0.0","http://194.9.56.86"]
+CORS_ALLOW_ALL_ORIGINS=True

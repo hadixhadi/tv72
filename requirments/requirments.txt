@@ -15,6 +15,7 @@ dj-email-url==1.0.6
 Django==4.2.10
 django-cache-url==3.4.5
 django-celery-beat==2.5.0
+django-cors-headers==4.3.1
 django-timezone-field==6.1.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
