@@ -27,7 +27,7 @@ class RegisterExam(APIView):
                 register_exam.is_active=True
                 register_exam.save()
                 return Response("exam created successfully",status=status.HTTP_201_CREATED)
-            return Response("user already registered this exam",status=status.HTTP_400_BAD_REQUEST)
+            return Response("user already registered this exam",status=status.HTTP_201_CREATED)
 
 
 
@@ -39,3 +39,29 @@ class StartExam(APIView):
             exam=Exam.objects.get(id=exam_id)
             ser_data=StartExamSerializer(instance=exam)
             return Response(ser_data.data,status=status.HTTP_200_OK)
+
+
+
+
+class CommitExam(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request,exam_id):
+        """
+        show questions of exam
+        this means user entered in dashboard as parent user:
+        `request.session['current_user_child'] == None:`
+        :param request:
+        :param course_id: id of course that user can check
+        :return:
+        """
+
+        if RegisteredExam.objects.filter(user=request.user,exam__id=exam_id).exists():
+            ser_data=UserAnswerSerializer(data=request.data,context={'request':request,
+                                                                     'exam_id':exam_id})
+            if ser_data.is_valid():
+                ser_data.create(ser_data.validated_data)
+            else:
+                return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(ser_data.data,status=status.HTTP_200_OK)
+        return Response("exam not valid!",status=status.HTTP_400_BAD_REQUEST)

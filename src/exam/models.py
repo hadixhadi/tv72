@@ -47,3 +47,10 @@ class RegisteredExam(models.Model):
     exam=models.ForeignKey(Exam,on_delete=models.CASCADE)
     created_at=models.DateTimeField(auto_now_add=True)
     is_active=models.BooleanField(default=False)
+
+
+class AnswerQuestion(models.Model):
+    user=models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
+    question=models.OneToOneField(Question,on_delete=models.CASCADE)
+    answer=models.SmallIntegerField()
+    exam=models.ForeignKey(Exam,on_delete=models.CASCADE,blank=True,null=True)

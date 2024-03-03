@@ -1,4 +1,4 @@
-amqp==5.2.0
+amqp
 asgiref==3.7.2
 attrs==23.2.0
 billiard==4.2.0
