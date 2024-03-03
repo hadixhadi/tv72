@@ -1,8 +1,8 @@
 services:
   app:
     build: .
-    command: /bin/sh -c " cd src/ && python manage.py migrate && python manage.py runserver 0.0.0.0:8000 "
-#    command: /bin/sh -c " cd src/ && python manage.py migrate && gunicorn config.wsgi -b 0.0.0.0:8000"
+#    command: /bin/sh -c " cd src/ && python manage.py migrate && python manage.py runserver 0.0.0.0:8000 "
+    command: /bin/sh -c " cd src/ && python manage.py migrate && gunicorn config.wsgi -b 0.0.0.0:8000"
     container_name: tavan7app
     restart: always
     volumes:
