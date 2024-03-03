@@ -35,5 +35,7 @@ class StartExam(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request,exam_id):
         user = request.user
-        registered_exam=RegisteredExam.objects.filter(user=user, exam__id=exam_id)
-        exam=registered_exam.exam
+        if RegisteredExam.objects.filter(user=user, exam__id=exam_id).exists():
+            exam=Exam.objects.get(id=exam_id)
+            ser_data=StartExamSerializer(instance=exam)
+            return Response(ser_data.data,status=status.HTTP_200_OK)
