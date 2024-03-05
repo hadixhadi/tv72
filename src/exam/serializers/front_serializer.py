@@ -4,10 +4,14 @@ from rest_framework.response import Response
 
 from exam.models import *
 
-
+class EntryUserSpecificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=get_user_model()
+        fields=['first_name']
 
 class ExamModelSerializer(serializers.ModelSerializer):
     user_registered_exams=serializers.SerializerMethodField()
+    first_name=serializers.SerializerMethodField()
     class Meta:
         model=Exam
         fields='__all__'
@@ -16,6 +20,11 @@ class ExamModelSerializer(serializers.ModelSerializer):
         request=self.context.get('request')
         all_registered_exams=RegisteredExam.objects.filter(user=request.user)
         ser_data=RegisteredExamModelSerializer(instance=all_registered_exams,many=True)
+        return ser_data.data
+    def get_first_name(self,obj):
+        request=self.context.get('request')
+        user=request.user
+        ser_data=EntryUserSpecificationSerializer(instance=user)
         return ser_data.data
 class QuestionsSerializer(serializers.ModelSerializer):
     class Meta:
