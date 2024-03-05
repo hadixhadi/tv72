@@ -7,11 +7,16 @@ from exam.models import *
 
 
 class ExamModelSerializer(serializers.ModelSerializer):
+    user_registered_exams=serializers.SerializerMethodField()
     class Meta:
         model=Exam
         fields='__all__'
 
-
+    def get_user_registered_exams(self,obj):
+        request=self.context.get('request')
+        all_registered_exams=RegisteredExam.objects.filter(user=request.user)
+        ser_data=RegisteredExamModelSerializer(instance=all_registered_exams,many=True)
+        return ser_data.data
 class QuestionsSerializer(serializers.ModelSerializer):
     class Meta:
         model=Question
@@ -56,3 +61,9 @@ class UserAnswerSerializer(serializers.Serializer):
                                                    ))
             AnswerQuestion.objects.bulk_create(user_answers)
             return Response("done",status=status.HTTP_200_OK)
+
+
+class RegisteredExamModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=RegisteredExam
+        fields=['exam']

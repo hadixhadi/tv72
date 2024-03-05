@@ -9,7 +9,7 @@ class ExamsList(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request):
         all_exam=Exam.objects.all()
-        ser_data=ExamModelSerializer(instance=all_exam,many=True)
+        ser_data=ExamModelSerializer(instance=all_exam,many=True,context={'request':request})
         return Response(ser_data.data,status=status.HTTP_200_OK)
 
 
@@ -27,7 +27,7 @@ class RegisterExam(APIView):
                 register_exam.is_active=True
                 register_exam.save()
                 return Response("exam created successfully",status=status.HTTP_201_CREATED)
-            return Response("user already registered this exam",status=status.HTTP_201_CREATED)
+            return Response("user already registered this exam",status=status.HTTP_403_FORBIDDEN)
 
 
 
@@ -60,6 +60,7 @@ class CommitExam(APIView):
                                                                      'exam_id':exam_id})
             if ser_data.is_valid():
                 ser_data.create(ser_data.validated_data)
+
             else:
                 return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
