@@ -19,6 +19,8 @@ class RegisterExam(APIView):
         with transaction.atomic():
             user=request.user
             exam=Exam.objects.get(id=exam_id)
+            modules=Module.objects.filter(exam__id=exam_id)
+            module_ser=ModuleIdModelSerializer(instance=modules,many=True)
             if not RegisteredExam.objects.filter(user=user, exam=exam).exists():
                 register_exam=RegisteredExam.objects.create(
                     exam=exam,
@@ -27,8 +29,8 @@ class RegisterExam(APIView):
                 register_exam.is_active=True
                 register_exam.save()
 
-                return Response("exam created successfully",status=status.HTTP_201_CREATED)
-            return Response("user already registered this exam",status=status.HTTP_403_FORBIDDEN)
+                return Response(module_ser.data,status=status.HTTP_201_CREATED)
+            return Response(module_ser.data,status=status.HTTP_403_FORBIDDEN)
 
 
 
@@ -38,6 +40,7 @@ class StartExam(APIView):
         user = request.user
         try:
             if RegisteredExam.objects.filter(user=user, exam__id=exam_id).exists():
+                # exam=Exam.objects.get(id=exam_id)
                 module=Module.objects.get(exam__id=exam_id,id=module_id)
                 ser_data=ExamModuleSerializer(instance=module,context={'request':request})
                 # ser_data=StartExamSerializer(instance=exam,context={"request":request})

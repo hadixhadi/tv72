@@ -68,11 +68,11 @@ class ExamModuleSerializer(serializers.ModelSerializer):
         questions=Question.objects.filter(module__id=obj.id)
         ser_data=QuestionsSerializer(instance=questions,many=True)
         return ser_data.data
-# class StartExamSerializer(serializers.ModelSerializer):
-#     module=serializers.SerializerMethodField()
-#     class Meta:
-#         model=Exam
-#         fields='__all__'
+class StartExamSerializer(serializers.ModelSerializer):
+    module=serializers.SerializerMethodField()
+    class Meta:
+        model=Exam
+        fields='__all__'
     def get_module(self,obj):
         module=Module.objects.filter(exam__id=obj.id)
         requests=self.context.get("request")
