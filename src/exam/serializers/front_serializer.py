@@ -59,8 +59,9 @@ class ExamModuleSerializer(serializers.ModelSerializer):
     def get_answered_questions(self,obj):
         request=self.context.get("request")
         exam=obj.exam
-        all_answered_questions=AnswerQuestion.objects.filter(exam=exam,user=request.user)
-        if len(all_answered_questions) > 1:
+        all_answered_questions=AnswerQuestion.objects.filter(exam=exam,
+                                                             user=request.user,question__module=obj)
+        if len(all_answered_questions) >= 1:
             ser_data=AnsweredQuestionsModelSerializer(instance=all_answered_questions,many=True)
             return ser_data.data
         return None
