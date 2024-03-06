@@ -107,5 +107,5 @@ SIMPLE_JWT = {
 
 
 #CORS settings
-CSRF_TRUSTED_ORIGINS = ["http://0.0.0.0","https://backend.tavan7.ir"]
+CSRF_TRUSTED_ORIGINS = ["http://0.0.0.0","http://194.9.56.86"]
 CORS_ALLOW_ALL_ORIGINS=True

@@ -16,12 +16,24 @@ class EntryUserSpecificationSerializer(serializers.ModelSerializer):
         model=get_user_model()
         fields=['first_name']
 
+
+
+class ModuleIdModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Module
+        fields=['id','name']
 class ExamModelSerializer(serializers.ModelSerializer):
     user_registered_exams=serializers.SerializerMethodField()
     first_name=serializers.SerializerMethodField()
+    modules=serializers.SerializerMethodField()
     class Meta:
         model=Exam
         fields='__all__'
+
+    def get_modules(self,obj):
+        module=obj.exam_module.all()
+        ser_data=ModuleIdModelSerializer(instance=module,many=True)
+        return ser_data.data
 
     def get_user_registered_exams(self,obj):
         request=self.context.get('request')
@@ -56,11 +68,11 @@ class ExamModuleSerializer(serializers.ModelSerializer):
         questions=Question.objects.filter(module__id=obj.id)
         ser_data=QuestionsSerializer(instance=questions,many=True)
         return ser_data.data
-class StartExamSerializer(serializers.ModelSerializer):
-    module=serializers.SerializerMethodField()
-    class Meta:
-        model=Exam
-        fields='__all__'
+# class StartExamSerializer(serializers.ModelSerializer):
+#     module=serializers.SerializerMethodField()
+#     class Meta:
+#         model=Exam
+#         fields='__all__'
     def get_module(self,obj):
         module=Module.objects.filter(exam__id=obj.id)
         requests=self.context.get("request")
@@ -89,8 +101,9 @@ class UserAnswerSerializer(serializers.Serializer):
             AnswerQuestion.objects.bulk_create(user_answers)
             return Response("done",status=status.HTTP_200_OK)
 
-
 class RegisteredExamModelSerializer(serializers.ModelSerializer):
     class Meta:
         model=RegisteredExam
         fields=['exam', 'is_active']
+
+
