@@ -35,10 +35,14 @@ class StartExam(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request,exam_id):
         user = request.user
-        if RegisteredExam.objects.filter(user=user, exam__id=exam_id).exists():
-            exam=Exam.objects.get(id=exam_id)
-            ser_data=StartExamSerializer(instance=exam)
-            return Response(ser_data.data,status=status.HTTP_200_OK)
+        try:
+            if RegisteredExam.objects.filter(user=user, exam__id=exam_id).exists():
+                exam=Exam.objects.get(id=exam_id)
+                ser_data=StartExamSerializer(instance=exam,context={"request":request})
+                return Response(ser_data.data,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_400_BAD_REQUEST)
+
 
 
 
@@ -60,6 +64,11 @@ class CommitExam(APIView):
                                                                      'exam_id':exam_id})
             if ser_data.is_valid():
                 ser_data.create(ser_data.validated_data)
+                if ser_data.validated_data['is_complete']==True:
+                    registered_exam=RegisteredExam.objects.get(user=request.user,exam__id=exam_id)
+                    registered_exam.is_active=False
+                    registered_exam.save()
+
 
             else:
                 return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
