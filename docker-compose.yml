@@ -1,8 +1,8 @@
 services:
   app:
     build: .
-    command: /bin/sh -c " cd src/ && python manage.py migrate && python manage.py runserver 0.0.0.0:8000 "
-#    command: /bin/sh -c " cd src/ && python manage.py migrate && gunicorn config.wsgi -b 0.0.0.0:8000"
+#    command: /bin/sh -c " cd src/ && python manage.py migrate && python manage.py runserver 0.0.0.0:8000 "
+    command: /bin/sh -c " cd src/ && python manage.py migrate && gunicorn config.wsgi -b 0.0.0.0:8000"
     container_name: tavan7app
     restart: always
     volumes:
@@ -57,20 +57,20 @@ services:
       - "RABBITMQ_DEFAULT_USER=guest"
       - "RABBITMQ_DEFAULT_PASS=guest"
 
-#  nginx:
-#    container_name: tavan7nginx
-#    command: nginx -g 'daemon off;'
-#    image: public.ecr.aws/nginx/nginx:stable-perl
-#    depends_on:
-#      - app
-#    networks:
-#      - main
-#    ports:
-#      - "80:80"
-#    restart: always
-#    volumes:
-#      - ./nginx.conf:/etc/nginx/nginx.conf
-#      - ./src/config/static/:/media/
+  nginx:
+    container_name: tavan7nginx
+    command: nginx -g 'daemon off;'
+    image: public.ecr.aws/nginx/nginx:stable-perl
+    depends_on:
+      - app
+    networks:
+      - main
+    ports:
+      - "80:80"
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./src/config/static/:/media/
 
 networks:
   main:
