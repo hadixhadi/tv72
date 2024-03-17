@@ -5,7 +5,7 @@ from kavenegar import KavenegarAPI
 from rest_framework.exceptions import APIException
 
 from accounts.models import OtpCode
-from ippanel import Client
+
 
 
 @shared_task
