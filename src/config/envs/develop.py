@@ -108,4 +108,11 @@ SIMPLE_JWT = {
 
 #CORS settings
 CSRF_TRUSTED_ORIGINS = ["http://0.0.0.0","http://194.9.56.86"]
-CORS_ALLOW_ALL_ORIGINS=True
+
+CORS_ORIGIN_WHITELIST = [
+    'https://ex.tavan7.ir',
+    'http://ex.tavan7.ir',
+    'http://localhost:3000',
+    # Add more allowed origins as needed
+]
+# CORS_ALLOW_ALL_ORIGINS=True
